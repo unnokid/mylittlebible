@@ -56,5 +56,6 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle
 
+.idea
 src/main/resources/application.yaml
 src/main/resources/application.yml
