@@ -1,6 +1,8 @@
 package com.example.mylittlebible.domain.bible.controller;
 
 import com.example.mylittlebible.domain.bible.dto.BibleDto;
+import com.example.mylittlebible.domain.bible.dto.SearchChapterRequest;
+import com.example.mylittlebible.domain.bible.dto.SearchChapterResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchTitleRequest;
 import com.example.mylittlebible.domain.bible.dto.SearchTitleResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchVerseRequest;
@@ -26,10 +28,18 @@ public class BibleController {
   //TODO: 파트 전체 가져오기
   @GetMapping("/title")
   public ResponseEntity<SearchTitleResponse> getTitle(@RequestBody SearchTitleRequest titleRequest){
+    SearchTitleResponse response = bibleService.getTitle(titleRequest.getTitle());
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(response);
   }
   //TODO: 한 장 찾기
+  @GetMapping("/chapter")
+  public ResponseEntity<SearchChapterResponse> getChapter(@RequestBody SearchChapterRequest chapterRequest){
+    SearchChapterResponse response = bibleService
+        .getChapter(chapterRequest.getTitle(), chapterRequest.getChapter());
+
+    return ResponseEntity.ok(response);
+  }
 
   //TODO: 한 절 찾기
   @GetMapping("/verse")
