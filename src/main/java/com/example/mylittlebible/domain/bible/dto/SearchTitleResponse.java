@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class SearchTitleResponse {
-  List<BibleDto> bible;
+  List<BibleDto> list;
 }
