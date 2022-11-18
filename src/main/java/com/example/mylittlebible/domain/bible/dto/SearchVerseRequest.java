@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchVerseRequest {
-  private String title;
-  private Long chapter;
-  private Long verse;
+
+    private String title;
+    private Long chapter;
+    private Long verse;
 }

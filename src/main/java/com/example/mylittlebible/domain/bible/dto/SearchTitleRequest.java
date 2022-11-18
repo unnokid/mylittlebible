@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchTitleRequest {
-  private String title;
+
+    private String title;
 }

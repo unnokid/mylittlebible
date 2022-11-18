@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class SearchChapterResponse {
-  List<BibleDto> list;
+
+    List<BibleDto> list;
 }

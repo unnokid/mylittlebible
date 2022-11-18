@@ -9,20 +9,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 public class Bible {
 
-  private String _id;
+    private String _id;
 
-  private String title;
+    private String title;
 
-  private Long chapter;
+    private Long chapter;
 
-  private Long verse;
+    private Long verse;
 
-  private String content;
+    private String content;
 
-  public Bible(String title, Long chapter, Long verse, String content) {
-    this.title = title;
-    this.chapter = chapter;
-    this.verse = verse;
-    this.content = content;
-  }
+    public Bible(String title, Long chapter, Long verse, String content) {
+        this.title = title;
+        this.chapter = chapter;
+        this.verse = verse;
+        this.content = content;
+    }
 }

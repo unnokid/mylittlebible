@@ -5,9 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class SearchChapterRequest {
-  private String title;
-  private Long Chapter;
+
+    private String title;
+    private Long Chapter;
 }

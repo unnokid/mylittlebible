@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class BibleDto {
-  private String title;
-  private Long chapter;
-  private Long verse;
-  private String content;
+
+    private String title;
+    private Long chapter;
+    private Long verse;
+    private String content;
 }
