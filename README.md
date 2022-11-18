@@ -1,8 +1,9 @@
 # mylittlebible
 
-데이터 버젼: 개역한글판
+데이터 버전: 개역한글판
 
 Commit Convention
+
 ```
 feat : 새로운 기능에 대한 커밋
 fix : 버그 수정에 대한 커밋
