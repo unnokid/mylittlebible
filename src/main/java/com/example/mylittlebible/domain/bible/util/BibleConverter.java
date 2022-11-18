@@ -47,4 +47,5 @@ public class BibleConverter {
         .content(bible.getContent())
         .build();
   }
+
 }

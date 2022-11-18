@@ -6,6 +6,7 @@ import com.example.mylittlebible.domain.bible.dto.SearchChapterResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchTitleRequest;
 import com.example.mylittlebible.domain.bible.dto.SearchTitleResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchVerseRequest;
+import com.example.mylittlebible.domain.bible.entity.Title;
 import com.example.mylittlebible.domain.bible.service.BibleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -37,7 +38,6 @@ public class BibleController {
   public ResponseEntity<SearchChapterResponse> getChapter(@RequestBody SearchChapterRequest chapterRequest){
     SearchChapterResponse response = bibleService
         .getChapter(chapterRequest.getTitle(), chapterRequest.getChapter());
-
     return ResponseEntity.ok(response);
   }
 
