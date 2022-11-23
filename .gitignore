@@ -59,3 +59,5 @@ gradle-app.setting
 .idea
 src/main/resources/application.yaml
 src/main/resources/application.yml
+src/test/resources/application.yml
+src/test/resources/application.yaml
