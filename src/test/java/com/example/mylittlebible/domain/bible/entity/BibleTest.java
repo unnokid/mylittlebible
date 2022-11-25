@@ -17,7 +17,7 @@ class BibleTest {
         void success() {
             Bible bible = new Bible("창세기", 1L, 1L, "테스트 중입니다.");
 
-            assertThat(bible.getTitle()).isEqualTo("창세기");
+            assertThat(bible.getBook()).isEqualTo("창세기");
             assertThat(bible.getChapter()).isEqualTo(1L);
             assertThat(bible.getVerse()).isEqualTo(1L);
             assertThat(bible.getContent()).isEqualTo("테스트 중입니다.");
