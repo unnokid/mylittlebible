@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SearchChapterRequest {
 
-    private String title;
+    private String book;
     private Long Chapter;
 }

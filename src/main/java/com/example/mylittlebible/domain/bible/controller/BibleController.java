@@ -1,10 +1,10 @@
 package com.example.mylittlebible.domain.bible.controller;
 
 import com.example.mylittlebible.domain.bible.dto.BibleDto;
+import com.example.mylittlebible.domain.bible.dto.SearchBookRequest;
+import com.example.mylittlebible.domain.bible.dto.SearchBookResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchChapterRequest;
 import com.example.mylittlebible.domain.bible.dto.SearchChapterResponse;
-import com.example.mylittlebible.domain.bible.dto.SearchTitleRequest;
-import com.example.mylittlebible.domain.bible.dto.SearchTitleResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchVerseRequest;
 import com.example.mylittlebible.domain.bible.service.BibleService;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +27,9 @@ public class BibleController {
 
     //TODO: 파트 전체 가져오기
     @GetMapping("/title")
-    public ResponseEntity<SearchTitleResponse> getTitle(
-        @RequestBody SearchTitleRequest titleRequest) {
-        SearchTitleResponse response = bibleService.getTitle(titleRequest.getTitle());
+    public ResponseEntity<SearchBookResponse> getTitle(
+        @RequestBody SearchBookRequest titleRequest) {
+        SearchBookResponse response = bibleService.getBook(titleRequest.getBook());
 
         return ResponseEntity.ok(response);
     }
@@ -39,7 +39,7 @@ public class BibleController {
     public ResponseEntity<SearchChapterResponse> getChapter(
         @RequestBody SearchChapterRequest chapterRequest) {
         SearchChapterResponse response = bibleService
-            .getChapter(chapterRequest.getTitle(), chapterRequest.getChapter());
+            .getChapter(chapterRequest.getBook(), chapterRequest.getChapter());
         return ResponseEntity.ok(response);
     }
 
@@ -47,7 +47,7 @@ public class BibleController {
     @GetMapping("/verse")
     public ResponseEntity<BibleDto> getVerse(@RequestBody SearchVerseRequest verseRequest) {
         BibleDto response = bibleService.getVerse(
-            verseRequest.getTitle(),
+            verseRequest.getBook(),
             verseRequest.getChapter(),
             verseRequest.getVerse());
 

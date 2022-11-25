@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BibleDto {
 
-    private String title;
+    private String book;
     private Long chapter;
     private Long verse;
     private String content;

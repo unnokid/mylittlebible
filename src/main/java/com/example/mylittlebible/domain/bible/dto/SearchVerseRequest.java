@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SearchVerseRequest {
 
-    private String title;
+    private String book;
     private Long chapter;
     private Long verse;
 }

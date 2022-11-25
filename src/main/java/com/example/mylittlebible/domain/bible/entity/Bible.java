@@ -10,7 +10,7 @@ public class Bible {
 
     private String _id;
 
-    private String title;
+    private String book;
 
     private Long chapter;
 
@@ -18,16 +18,16 @@ public class Bible {
 
     private String content;
 
-    public Bible(String title, Long chapter, Long verse, String content) {
-        setTitle(title);
+    public Bible(String book, Long chapter, Long verse, String content) {
+        setBook(book);
         setChapter(chapter);
         setVerse(verse);
         setContent(content);
     }
 
-    private void setTitle(String title){
-        checkBlank(title);
-        this.title = title;
+    private void setBook(String book){
+        checkBlank(book);
+        this.book = book;
     }
     private void setChapter(Long chapter){
         checkNumber(chapter);

@@ -1,8 +1,8 @@
 package com.example.mylittlebible.domain.bible.util;
 
 import com.example.mylittlebible.domain.bible.dto.BibleDto;
+import com.example.mylittlebible.domain.bible.dto.SearchBookResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchChapterResponse;
-import com.example.mylittlebible.domain.bible.dto.SearchTitleResponse;
 import com.example.mylittlebible.domain.bible.entity.Bible;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +16,7 @@ public class BibleConverter {
         String content
     ) {
         return BibleDto.builder()
-            .title(title)
+            .book(title)
             .chapter(chapter)
             .verse(verse)
             .content(content)
@@ -31,17 +31,17 @@ public class BibleConverter {
             .build();
     }
 
-    public static SearchTitleResponse titleFromBible(List<Bible> list) {
+    public static SearchBookResponse bookFromBible(List<Bible> list) {
         List<BibleDto> response = list.stream().map(BibleConverter::toBibleDto)
             .collect(Collectors.toList());
-        return SearchTitleResponse.builder()
+        return SearchBookResponse.builder()
             .list(response)
             .build();
     }
 
     private static BibleDto toBibleDto(Bible bible) {
         return BibleDto.builder()
-            .title(bible.getTitle())
+            .book(bible.getBook())
             .chapter(bible.getChapter())
             .verse(bible.getVerse())
             .content(bible.getContent())

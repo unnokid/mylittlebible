@@ -6,7 +6,8 @@ import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface BibleRepository extends MongoRepository<Bible, String> {
-    Optional<Bible> findBibleByTitleAndChapterAndVerse(String title, Long chapter, Long verse);
-    List<Bible> findAllByTitleAndChapter(String title, Long chapter);
-    List<Bible> findAllByTitle(String title);
+
+    Optional<Bible> findBibleByBookAndChapterAndVerse(String book, Long chapter, Long verse);
+    List<Bible> findBibleByBookAndChapter(String book, Long chapter);
+    List<Bible> findBibleByBook(String book);
 }
