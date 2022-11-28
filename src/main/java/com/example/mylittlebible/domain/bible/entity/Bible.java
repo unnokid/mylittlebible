@@ -29,14 +29,17 @@ public class Bible {
         checkBlank(book);
         this.book = book;
     }
+
     private void setChapter(Long chapter){
         checkNumber(chapter);
         this.chapter = chapter;
     }
+
     private void setVerse(Long verse){
         checkNumber(verse);
         this.verse = verse;
     }
+
     private void setContent(String content){
         checkBlank(content);
         this.content = content;
@@ -47,6 +50,7 @@ public class Bible {
             throw new RuntimeException();
         }
     }
+
     private void checkNumber(Long number){
         if(number<=0){
             throw new RuntimeException();

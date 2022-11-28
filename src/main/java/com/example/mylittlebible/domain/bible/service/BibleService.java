@@ -3,6 +3,7 @@ package com.example.mylittlebible.domain.bible.service;
 import com.example.mylittlebible.domain.bible.dto.BibleDto;
 import com.example.mylittlebible.domain.bible.dto.SearchBookResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchChapterResponse;
+import com.example.mylittlebible.domain.bible.dto.SearchSectionResponse;
 import com.example.mylittlebible.domain.bible.entity.Bible;
 import com.example.mylittlebible.domain.bible.repository.BibleRepository;
 import com.example.mylittlebible.domain.bible.util.BibleConverter;
@@ -41,5 +42,23 @@ public class BibleService {
     }
 
     //구간 찾기
-
+    public SearchSectionResponse getSection(
+        String frontBook,
+        Long frontChapter,
+        Long frontVerse,
+        String backBook,
+        Long backChapter,
+        Long backVerse
+    ){
+        List<Bible> bibleSection = bibleRepository
+            .findBibleSection(
+                frontBook,
+                frontChapter,
+                frontVerse,
+                backBook,
+                backChapter,
+                backVerse
+            );
+        return BibleConverter.sectionFromBible(bibleSection);
+    }
 }

@@ -5,6 +5,8 @@ import com.example.mylittlebible.domain.bible.dto.SearchBookRequest;
 import com.example.mylittlebible.domain.bible.dto.SearchBookResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchChapterRequest;
 import com.example.mylittlebible.domain.bible.dto.SearchChapterResponse;
+import com.example.mylittlebible.domain.bible.dto.SearchSectionRequest;
+import com.example.mylittlebible.domain.bible.dto.SearchSectionResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchVerseRequest;
 import com.example.mylittlebible.domain.bible.service.BibleService;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/bible")
 public class BibleController {
@@ -25,7 +26,6 @@ public class BibleController {
         this.bibleService = bibleService;
     }
 
-    //TODO: 파트 전체 가져오기
     @GetMapping("/title")
     public ResponseEntity<SearchBookResponse> getTitle(
         @RequestBody SearchBookRequest titleRequest) {
@@ -34,7 +34,6 @@ public class BibleController {
         return ResponseEntity.ok(response);
     }
 
-    //TODO: 한 장 찾기
     @GetMapping("/chapter")
     public ResponseEntity<SearchChapterResponse> getChapter(
         @RequestBody SearchChapterRequest chapterRequest) {
@@ -43,7 +42,6 @@ public class BibleController {
         return ResponseEntity.ok(response);
     }
 
-    //TODO: 한 절 찾기
     @GetMapping("/verse")
     public ResponseEntity<BibleDto> getVerse(@RequestBody SearchVerseRequest verseRequest) {
         BibleDto response = bibleService.getVerse(
@@ -53,6 +51,19 @@ public class BibleController {
 
         return ResponseEntity.ok(response);
     }
-    //TODO: 구간 찾아오기 A~B
 
+    //TODO: 구간 찾아오기 A~B
+    @GetMapping("/section")
+    public ResponseEntity<SearchSectionResponse> getSection(@RequestBody SearchSectionRequest sectionRequest){
+        SearchSectionResponse section = bibleService.getSection(
+            sectionRequest.getFrontBook(),
+            sectionRequest.getFrontChapter(),
+            sectionRequest.getFrontVerse(),
+            sectionRequest.getBackBook(),
+            sectionRequest.getBackChapter(),
+            sectionRequest.getBackVerse()
+        );
+
+        return ResponseEntity.ok(section);
+    }
 }
