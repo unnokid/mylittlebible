@@ -26,15 +26,15 @@ public class BibleService {
     }
 
     //장으로 찾기
-    public SearchChapterResponse getChapter(String title, Long chapter) {
-        List<Bible> list = bibleRepository.findBibleByBookAndChapter(title, chapter);
+    public SearchChapterResponse getChapter(String book, Long chapter) {
+        List<Bible> list = bibleRepository.findBibleByBookAndChapter(book, chapter);
         return BibleConverter.chapterFromBible(list);
     }
 
     //특정 찾기
-    public BibleDto getVerse(String title, Long chapter, Long verse) {
+    public BibleDto getVerse(String book, Long chapter, Long verse) {
         Bible bible = bibleRepository
-            .findBibleByBookAndChapterAndVerse(title, chapter, verse)
+            .findBibleByBookAndChapterAndVerse(book, chapter, verse)
             .orElseThrow(RuntimeException::new);
         return BibleConverter.verseFromBible(bible.getBook(), bible.getChapter(), bible.getVerse(),
             bible.getContent());
