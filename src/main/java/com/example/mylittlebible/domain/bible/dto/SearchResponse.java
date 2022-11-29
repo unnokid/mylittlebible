@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SearchBookResponse {
+public class SearchResponse {
 
     List<BibleDto> list;
 }
