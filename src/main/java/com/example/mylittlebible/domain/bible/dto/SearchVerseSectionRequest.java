@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SearchSectionChapterRequest {
+public class SearchVerseSectionRequest {
 
-    private String book;
-    private Long frontChapter;
-    private Long backChapter;
+    String book;
+    Long chapter;
+    Long frontVerse;
+    Long backVerse;
 }
