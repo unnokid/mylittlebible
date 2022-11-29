@@ -1,9 +1,7 @@
 package com.example.mylittlebible.domain.bible.util;
 
 import com.example.mylittlebible.domain.bible.dto.BibleDto;
-import com.example.mylittlebible.domain.bible.dto.SearchBookResponse;
-import com.example.mylittlebible.domain.bible.dto.SearchChapterResponse;
-import com.example.mylittlebible.domain.bible.dto.SearchSectionResponse;
+import com.example.mylittlebible.domain.bible.dto.SearchResponse;
 import com.example.mylittlebible.domain.bible.entity.Bible;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,28 +22,10 @@ public class BibleConverter {
             .build();
     }
 
-    public static SearchChapterResponse chapterFromBible(List<Bible> list) {
+    public static SearchResponse toSearchResponse(List<Bible> list) {
         List<BibleDto> response = list.stream().map(BibleConverter::toBibleDto)
             .collect(Collectors.toList());
-        return SearchChapterResponse.builder()
-            .list(response)
-            .build();
-    }
-
-    public static SearchBookResponse bookFromBible(List<Bible> list) {
-        List<BibleDto> response = list.stream().map(BibleConverter::toBibleDto)
-            .collect(Collectors.toList());
-        return SearchBookResponse.builder()
-            .list(response)
-            .build();
-    }
-
-    public static SearchSectionResponse sectionFromBible(List<Bible> list){
-        List<BibleDto> response = list
-            .stream()
-            .map(BibleConverter::toBibleDto)
-            .collect(Collectors.toList());
-        return SearchSectionResponse.builder()
+        return SearchResponse.builder()
             .list(response)
             .build();
     }
