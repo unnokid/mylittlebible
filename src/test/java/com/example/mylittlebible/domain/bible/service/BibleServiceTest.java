@@ -4,19 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.mylittlebible.domain.bible.dto.BibleDto;
 import com.example.mylittlebible.domain.bible.dto.SearchBookRequest;
-import com.example.mylittlebible.domain.bible.dto.SearchBookResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchChapterRequest;
-import com.example.mylittlebible.domain.bible.dto.SearchChapterResponse;
+import com.example.mylittlebible.domain.bible.dto.SearchResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchVerseRequest;
-import com.example.mylittlebible.domain.bible.repository.BibleRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@Slf4j
 @SpringBootTest
 @DisplayName("성경 서비스 테스트")
 class BibleServiceTest {
@@ -32,7 +28,7 @@ class BibleServiceTest {
         @DisplayName("성공테스트")
         void success() {
             SearchBookRequest request = new SearchBookRequest("창세기");
-            SearchBookResponse title = bibleService.getBook(request.getBook());
+            SearchResponse title = bibleService.searchBook(request.getBook());
 
             assertThat(title.getList().size()).isNotZero();
         }
@@ -41,7 +37,7 @@ class BibleServiceTest {
         @DisplayName("실패: 존재하지 않는 제목으로 조회 ")
         void failNotExistTitle() {
             SearchBookRequest request = new SearchBookRequest("요구르트");
-            SearchBookResponse title = bibleService.getBook(request.getBook());
+            SearchResponse title = bibleService.searchBook(request.getBook());
 
             assertThat(title.getList().size()).isEqualTo(0);
 
@@ -51,7 +47,7 @@ class BibleServiceTest {
         @DisplayName("실패: 빈 제목으로 조회 ")
         void failEmptyTitle() {
             SearchBookRequest request = new SearchBookRequest("");
-            SearchBookResponse title = bibleService.getBook(request.getBook());
+            SearchResponse title = bibleService.searchBook(request.getBook());
 
             assertThat(title.getList().size()).isZero();
         }
@@ -64,18 +60,18 @@ class BibleServiceTest {
         @DisplayName("성공: 창세기 1장 조회")
         void success() {
             SearchChapterRequest request = new SearchChapterRequest("창세기",1L);
-            SearchChapterResponse bible = bibleService
-                .getChapter(request.getBook(), request.getChapter());
+            SearchResponse bible = bibleService
+                .searchChapter(request.getBook(), request.getChapter());
 
             assertThat(bible.getList().size()).isNotZero();
         }
 
         @Test
         @DisplayName("실패: 존재하지 않는 장 조회")
-        void faliNotExist() {
+        void failNotExist() {
             SearchChapterRequest request = new SearchChapterRequest("창세기",0L);
-            SearchChapterResponse bible = bibleService
-                .getChapter(request.getBook(), request.getChapter());
+            SearchResponse bible = bibleService
+                .searchChapter(request.getBook(), request.getChapter());
 
             assertThat(bible.getList().size()).isNotZero();
         }
@@ -89,7 +85,7 @@ class BibleServiceTest {
         void success() {
             SearchVerseRequest request = new SearchVerseRequest("창세기",1L,1L);
             BibleDto bible = bibleService
-                .getVerse(request.getBook(), request.getChapter(), request.getVerse());
+                .searchVerse(request.getBook(), request.getChapter(), request.getVerse());
 
             assertThat(bible.getBook()).isEqualTo("창세기");
             assertThat(bible.getChapter()).isEqualTo(1L);
