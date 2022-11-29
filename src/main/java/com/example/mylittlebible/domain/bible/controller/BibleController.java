@@ -2,15 +2,13 @@ package com.example.mylittlebible.domain.bible.controller;
 
 import com.example.mylittlebible.domain.bible.dto.BibleDto;
 import com.example.mylittlebible.domain.bible.dto.SearchBookRequest;
-import com.example.mylittlebible.domain.bible.dto.SearchBookResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchChapterRequest;
-import com.example.mylittlebible.domain.bible.dto.SearchChapterResponse;
-import com.example.mylittlebible.domain.bible.dto.SearchSectionRequest;
-import com.example.mylittlebible.domain.bible.dto.SearchSectionResponse;
+import com.example.mylittlebible.domain.bible.dto.SearchChapterSectionRequest;
+import com.example.mylittlebible.domain.bible.dto.SearchResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchVerseRequest;
+import com.example.mylittlebible.domain.bible.dto.SearchVerseSectionRequest;
 import com.example.mylittlebible.domain.bible.service.BibleService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,24 +25,24 @@ public class BibleController {
     }
 
     @GetMapping("/title")
-    public ResponseEntity<SearchBookResponse> getTitle(
+    public ResponseEntity<SearchResponse> searchTitle(
         @RequestBody SearchBookRequest titleRequest) {
-        SearchBookResponse response = bibleService.getBook(titleRequest.getBook());
+        SearchResponse response = bibleService.searchBook(titleRequest.getBook());
 
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/chapter")
-    public ResponseEntity<SearchChapterResponse> getChapter(
+    public ResponseEntity<SearchResponse> searchChapter(
         @RequestBody SearchChapterRequest chapterRequest) {
-        SearchChapterResponse response = bibleService
-            .getChapter(chapterRequest.getBook(), chapterRequest.getChapter());
+        SearchResponse response = bibleService
+            .searchChapter(chapterRequest.getBook(), chapterRequest.getChapter());
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/verse")
-    public ResponseEntity<BibleDto> getVerse(@RequestBody SearchVerseRequest verseRequest) {
-        BibleDto response = bibleService.getVerse(
+    public ResponseEntity<BibleDto> searchVerse(@RequestBody SearchVerseRequest verseRequest) {
+        BibleDto response = bibleService.searchVerse(
             verseRequest.getBook(),
             verseRequest.getChapter(),
             verseRequest.getVerse());
@@ -52,15 +50,23 @@ public class BibleController {
         return ResponseEntity.ok(response);
     }
 
-    //TODO: 구간 찾아오기 A~B
-    @GetMapping("/section")
-    public ResponseEntity<SearchSectionResponse> getSection(@RequestBody SearchSectionRequest sectionRequest){
-        SearchSectionResponse section = bibleService.getSection(
-            sectionRequest.getFrontBook(),
+    @GetMapping("/section/chapter")
+    public ResponseEntity<SearchResponse> searchChapterSection(@RequestBody SearchChapterSectionRequest sectionRequest){
+        SearchResponse section = bibleService.searchChapterSection(
+            sectionRequest.getBook(),
             sectionRequest.getFrontChapter(),
+            sectionRequest.getBackChapter()
+        );
+
+        return ResponseEntity.ok(section);
+    }
+
+    @GetMapping("/section/verse")
+    public ResponseEntity<SearchResponse> searchVerseSection(@RequestBody SearchVerseSectionRequest sectionRequest){
+        SearchResponse section = bibleService.searchVerseSection(
+            sectionRequest.getBook(),
+            sectionRequest.getChapter(),
             sectionRequest.getFrontVerse(),
-            sectionRequest.getBackBook(),
-            sectionRequest.getBackChapter(),
             sectionRequest.getBackVerse()
         );
 
