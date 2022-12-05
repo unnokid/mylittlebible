@@ -1,18 +1,22 @@
 package com.example.mylittlebible.domain.bible.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.example.mylittlebible.domain.bible.dto.BibleDto;
 import com.example.mylittlebible.domain.bible.dto.SearchBookRequest;
 import com.example.mylittlebible.domain.bible.dto.SearchChapterRequest;
+import com.example.mylittlebible.domain.bible.dto.SearchChapterSectionRequest;
 import com.example.mylittlebible.domain.bible.dto.SearchResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchVerseRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+@Slf4j
 @SpringBootTest
 @DisplayName("성경 서비스 테스트")
 class BibleServiceTest {
@@ -25,7 +29,7 @@ class BibleServiceTest {
     class getBibleForTitle {
 
         @Test
-        @DisplayName("성공테스트")
+        @DisplayName("성공: 제목으로 조회")
         void success() {
             SearchBookRequest request = new SearchBookRequest("창세기");
             SearchResponse title = bibleService.searchBook(request.getBook());
@@ -67,13 +71,23 @@ class BibleServiceTest {
         }
 
         @Test
+        @DisplayName("실패: 존재하지 않는 제목 조회")
+        void failNotExistTitle() {
+            SearchChapterRequest request = new SearchChapterRequest("요구르트",1L);
+            SearchResponse bible = bibleService
+                .searchChapter(request.getBook(), request.getChapter());
+
+            assertThat(bible.getList().size()).isZero();
+        }
+
+        @Test
         @DisplayName("실패: 존재하지 않는 장 조회")
-        void failNotExist() {
+        void failNotExistChapter() {
             SearchChapterRequest request = new SearchChapterRequest("창세기",0L);
             SearchResponse bible = bibleService
                 .searchChapter(request.getBook(), request.getChapter());
 
-            assertThat(bible.getList().size()).isNotZero();
+            assertThat(bible.getList().size()).isZero();
         }
     }
 
@@ -93,5 +107,36 @@ class BibleServiceTest {
             assertThat(bible.getContent()).isEqualTo("태초에 하나님이 천지를 창조하시니라");
         }
 
+        @Test
+        @DisplayName("실패: 존재하지 않는 제목으로 조회")
+        void failNotExistTitle() {
+            SearchVerseRequest request = new SearchVerseRequest("요구르트",1L,1L);
+
+            assertThatThrownBy(()-> bibleService
+                .searchVerse(request.getBook(), request.getChapter(), request.getVerse()))
+                .isInstanceOf(RuntimeException.class);
+        }
+
+        @Test
+        @DisplayName("실패: 존재하지 않는 장으로 조회")
+        void failNotExistChapter() {
+            SearchVerseRequest request = new SearchVerseRequest("창세기",100L,1L);
+
+            assertThatThrownBy(()-> bibleService
+                .searchVerse(request.getBook(), request.getChapter(), request.getVerse()))
+                .isInstanceOf(RuntimeException.class);
+        }
+
+        @Test
+        @DisplayName("실패: 존재하지 않는 절으로 조회")
+        void failNotExistVerse() {
+            SearchVerseRequest request = new SearchVerseRequest("창세기",1L,100L);
+
+            assertThatThrownBy(()-> bibleService
+                .searchVerse(request.getBook(), request.getChapter(), request.getVerse()))
+                .isInstanceOf(RuntimeException.class);
+        }
+
     }
+
 }
