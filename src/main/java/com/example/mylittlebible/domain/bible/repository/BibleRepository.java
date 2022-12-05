@@ -14,6 +14,6 @@ public interface BibleRepository extends MongoRepository<Bible, String> {
 
     @Query("{'book' : ?0 'chapter': {'$gte': ?1,'$lte':?2}}")
     List<Bible> findChapterSection(String book, Long frontChapter, Long backChapter);
-    @Query("{'book' : ?0 'chapter': ?1 'verse': {'$gte': ?3,'$lte':?4}} ")
+    @Query("{'book' : ?0 'chapter': ?1 'verse': {'$gte': ?2,'$lte':?3}} ")
     List<Bible> findVerseSection(String book, Long chapter, Long frontVerse, Long backVerse);
 }
