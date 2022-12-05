@@ -9,6 +9,7 @@ import com.example.mylittlebible.domain.bible.dto.SearchChapterRequest;
 import com.example.mylittlebible.domain.bible.dto.SearchChapterSectionRequest;
 import com.example.mylittlebible.domain.bible.dto.SearchResponse;
 import com.example.mylittlebible.domain.bible.dto.SearchVerseRequest;
+import com.example.mylittlebible.domain.bible.dto.SearchVerseSectionRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -139,4 +140,104 @@ class BibleServiceTest {
 
     }
 
+    @Nested
+    @DisplayName("장에 대한 구간 조회 테스트")
+    class searchSectionForChapter {
+
+        @Test
+        @DisplayName("성공: 창세기 1~2장 조회")
+        void success() {
+            SearchChapterSectionRequest request = new SearchChapterSectionRequest("창세기",1L,2L);
+            SearchResponse response = bibleService.searchChapterSection(
+                request.getBook(),
+                request.getFrontChapter(),
+                request.getBackChapter()
+            );
+
+            for(BibleDto dto :response.getList()){
+                log.info("제목: {}",dto.getBook());
+                log.info("장: {}",dto.getChapter());
+                log.info("절: {}",dto.getVerse());
+                log.info("내용: {}",dto.getContent());
+            }
+        }
+
+        @Test
+        @DisplayName("실패: 존재하지 않는 구간 조회")
+        void failNotExistSection() {
+            SearchChapterSectionRequest request = new SearchChapterSectionRequest("창세기",-2L,-1L);
+            SearchResponse response = bibleService.searchChapterSection(
+                request.getBook(),
+                request.getFrontChapter(),
+                request.getBackChapter()
+            );
+
+            assertThat(response.getList().size()).isZero();
+        }
+
+        @Test
+        @DisplayName("실패: 존재하지 장으로 구간 조회")
+        void failNotExistTitle() {
+            SearchChapterSectionRequest request = new SearchChapterSectionRequest("요구르트",1L,2L);
+            SearchResponse response = bibleService.searchChapterSection(
+                request.getBook(),
+                request.getFrontChapter(),
+                request.getBackChapter()
+            );
+
+            assertThat(response.getList().size()).isZero();
+        }
+    }
+
+    @Nested
+    @DisplayName("절에 대한 구간 조회 테스트")
+    class searchSectionForVerse {
+
+        @Test
+        @DisplayName("성공: 창세기 1장 1~10절 조회")
+        void success() {
+            SearchVerseSectionRequest request = new SearchVerseSectionRequest("창세기",1L,1L,10L);
+            SearchResponse response = bibleService.searchVerseSection(
+                request.getBook(),
+                request.getChapter(),
+                request.getFrontVerse(),
+                request.getBackVerse()
+            );
+
+            for(BibleDto dto :response.getList()){
+                log.info("제목: {}",dto.getBook());
+                log.info("장: {}",dto.getChapter());
+                log.info("절: {}",dto.getVerse());
+                log.info("내용: {}",dto.getContent());
+            }
+        }
+
+        @Test
+        @DisplayName("실패: 존재하지 않는 구간 조회")
+        void failNotExistSection() {
+            SearchVerseSectionRequest request = new SearchVerseSectionRequest("창세기",1L,-100L,-1L);
+            SearchResponse response = bibleService.searchVerseSection(
+                request.getBook(),
+                request.getChapter(),
+                request.getFrontVerse(),
+                request.getBackVerse()
+            );
+
+            assertThat(response.getList().size()).isZero();
+        }
+
+        @Test
+        @DisplayName("실패: 존재하지 장으로 구간 조회")
+        void failNotExistTitle() {
+            SearchVerseSectionRequest request = new SearchVerseSectionRequest("요구르트",1L,1L,10L);
+            SearchResponse response = bibleService.searchVerseSection(
+                request.getBook(),
+                request.getChapter(),
+                request.getFrontVerse(),
+                request.getBackVerse()
+            );
+
+            assertThat(response.getList().size()).isZero();
+        }
+    }
 }
