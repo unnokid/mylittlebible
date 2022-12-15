@@ -30,12 +30,16 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'mysql:mysql-connector-java:8.0.30'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // querydsl 추가
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
 
+    runtimeOnly 'mysql:mysql-connector-java'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -52,7 +56,8 @@ tasks.named('test') {
 //querydsl 추가 시작
 def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
-    springDataMongo = true
+    //springDataMongo = true
+    jpa = true
     querydslSourcesDir = querydslDir
 }
 sourceSets {
