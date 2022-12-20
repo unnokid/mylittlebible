@@ -3,10 +3,12 @@ package com.example.mylittlebible.domain.user.entity;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Embeddable;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @NoArgsConstructor
+@Getter
 public class FavoriteId implements Serializable {
 
     private String book;
