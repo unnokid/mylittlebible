@@ -1,5 +1,6 @@
 package com.example.mylittlebible.domain.user.entity;
 
+import com.example.mylittlebible.domain.user.util.PasswordEncryptor;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,10 @@ public class User {
 
     private void changeRecent(String book, Long chapter, Long verse){
         recent = new FavoriteId(book,chapter,verse);
+    }
+
+    public boolean matchPassword(String password) {
+        return PasswordEncryptor.isMatch(password, this.password);
     }
 
 }
