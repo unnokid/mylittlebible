@@ -7,12 +7,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor
+@Getter
 @Builder
-public class UserInfoResponse {
+public class MyPageResponse {
+
+    private String email;
     private String name;
     private Gender gender;
     private String birth;
     private List<Favorite> bookmarkList;
+    //TODO: 최근 기록 추가 필요
 }
