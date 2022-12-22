@@ -1,13 +1,16 @@
 package com.example.mylittlebible.domain.user.service;
 
-import com.example.mylittlebible.domain.bible.entity.Bible;
-import com.example.mylittlebible.domain.bible.repository.BibleRepository;
+import com.example.mylittlebible.domain.user.aop.SessionManager;
+import com.example.mylittlebible.domain.user.dto.MyPageResponse;
 import com.example.mylittlebible.domain.user.dto.SignupRequest;
 import com.example.mylittlebible.domain.user.dto.UserInfoResponse;
 import com.example.mylittlebible.domain.user.entity.FavoriteId;
 import com.example.mylittlebible.domain.user.entity.User;
 import com.example.mylittlebible.domain.user.repository.UserRepository;
 import com.example.mylittlebible.domain.user.util.UserConverter;
+import com.example.mylittlebible.domain.user.util.Validation;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,20 +18,32 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserService {
 
-    private UserRepository userRepository;
-    private BibleRepository bibleRepository;
+    private final UserRepository userRepository;
+    private final SessionManager sessionManager;
 
     public UserService(UserRepository userRepository,
-        BibleRepository bibleRepository) {
+        SessionManager sessionManager) {
         this.userRepository = userRepository;
-        this.bibleRepository = bibleRepository;
+        this.sessionManager = sessionManager;
     }
 
     @Transactional
     public void save(SignupRequest request){
+        Validation.validateEmail(request.getEmail());
+        Validation.validatePassword(request.getPassword());
         validatePassword(request.getPassword(), request.getPasswordCheck());
 
         userRepository.save(UserConverter.toUser(request));
+    }
+
+    public void login(String email, String password, HttpServletResponse response){
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(RuntimeException::new);
+        if(!user.matchPassword(password)){
+            throw new RuntimeException();
+        }
+        //세션 생성
+        sessionManager.createSession(user.getId(),response);
     }
 
     @Transactional
@@ -44,15 +59,8 @@ public class UserService {
 
         User user = userRepository.findById(userId)
             .orElseThrow(RuntimeException::new);
-        FavoriteId recent = user.getRecent();
 
-        Bible bible = bibleRepository.findBibleByBookAndChapterAndVerse(
-            recent.getBook(),
-            recent.getChapter(),
-            recent.getVerse()
-        ).orElseThrow(RuntimeException::new);
-
-        return UserConverter.getInfoFromUser(user,bible.getContent());
+        return UserConverter.getInfoFromUser(user);
     }
 
     @Transactional
@@ -63,10 +71,21 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    @Transactional
+    public MyPageResponse getMyInfo(String email){
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(RuntimeException::new);
+        return UserConverter.getMyInfoFromUser(user);
+    }
+
     private void validatePassword(String password, String passwordCheck){
         //정규화 비밀번호 기준 추가해야함
         if(!password.equals(passwordCheck)){
             throw new RuntimeException();
         }
+    }
+
+    public String getLoginUser(HttpServletRequest request) {
+        return (String) sessionManager.getSession(request);
     }
 }
