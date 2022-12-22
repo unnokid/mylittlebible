@@ -1,9 +1,13 @@
 package com.example.mylittlebible.domain.user.controller;
 
+import com.example.mylittlebible.domain.user.aop.CurrentUser;
+import com.example.mylittlebible.domain.user.aop.LoginCheck;
 import com.example.mylittlebible.domain.user.dto.LoginRequest;
+import com.example.mylittlebible.domain.user.dto.MyPageResponse;
 import com.example.mylittlebible.domain.user.dto.SignupRequest;
 import com.example.mylittlebible.domain.user.dto.UserInfoResponse;
 import com.example.mylittlebible.domain.user.service.UserService;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,11 +35,26 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response){
+        userService.login(loginRequest.getEmail(),loginRequest.getPassword(),response);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{userId}")
     public ResponseEntity<UserInfoResponse> userInfo(@PathVariable Long userId){
         UserInfoResponse userInfo = userService.getUserInfo(userId);
 
         return ResponseEntity.ok(userInfo);
+    }
+
+    @LoginCheck
+    @GetMapping("/myPage")
+    public ResponseEntity<MyPageResponse> myPage(@CurrentUser String email){
+        MyPageResponse myInfo = userService.getMyInfo(email);
+
+        return ResponseEntity.ok(myInfo);
     }
 
     @DeleteMapping("/{userId}")
