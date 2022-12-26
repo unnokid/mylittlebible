@@ -5,10 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.example.mylittlebible.domain.user.aop.SessionManager;
 import com.example.mylittlebible.domain.user.dto.SignupRequest;
+import com.example.mylittlebible.domain.user.dto.UserInfoResponse;
 import com.example.mylittlebible.domain.user.entity.Gender;
 import com.example.mylittlebible.domain.user.entity.User;
 import com.example.mylittlebible.domain.user.repository.UserRepository;
 import com.example.mylittlebible.domain.user.util.PasswordEncryptor;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+@Transactional
 @SpringBootTest
 @DisplayName("유저 서비스 테스트")
 class UserServiceTest {
@@ -163,13 +166,28 @@ class UserServiceTest {
     }
 
     @Nested
-    @DisplayName("유저 정보 테스트")
+    @DisplayName("유저 정보 조회 테스트")
     class getUserInfoTest {
 
         @Test
         @DisplayName("성공: 유저 정보 조회 성공")
         void success() {
+            userService.save(request);
+            User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(RuntimeException::new);
 
+            UserInfoResponse userInfo = userService.getUserInfo(user.getId());
+            assertThat(userInfo.getName()).isEqualTo(user.getName());
+            assertThat(userInfo.getBirth()).isEqualTo(user.getBirth().toString());
+            assertThat(userInfo.getGender()).isEqualTo(user.getGender());
+            assertThat(userInfo.getBookmarkList().size()).isZero();
+        }
+
+        @Test
+        @DisplayName("싪패: 존재하지 않는 유저 정보 입력")
+        void failNotExistUser() {
+            assertThatThrownBy(() -> userService.getUserInfo(-10L))
+                .isInstanceOf(RuntimeException.class);
         }
     }
 
@@ -200,17 +218,6 @@ class UserServiceTest {
 
         @Test
         @DisplayName("성공: 내 정보 조회 성공")
-        void success() {
-
-        }
-    }
-
-    @Nested
-    @DisplayName("현재 로그인 된 유저 테스트")
-    class getLoginUser {
-
-        @Test
-        @DisplayName("성공: 로그인 유저 조회")
         void success() {
 
         }
