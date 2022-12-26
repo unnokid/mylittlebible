@@ -10,12 +10,12 @@ import com.example.mylittlebible.domain.user.entity.User;
 import com.example.mylittlebible.domain.user.repository.UserRepository;
 import com.example.mylittlebible.domain.user.util.PasswordEncryptor;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 @SpringBootTest
 @DisplayName("유저 서비스 테스트")
@@ -30,6 +30,19 @@ class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    private SignupRequest request;
+    @BeforeEach
+    void setup() {
+        request = new SignupRequest(
+            "kim@naver.com",
+            "abcd1234!",
+            "abcd1234!",
+            "김철수",
+            "1997-06-09",
+            Gender.MALE
+        );
+    }
+
     @AfterEach
     void tearDown() {
         userRepository.deleteAll();
@@ -42,14 +55,6 @@ class UserServiceTest {
         @Test
         @DisplayName("성공: 계정 생성")
         void success() {
-            SignupRequest request = new SignupRequest(
-                "kim@naver.com",
-                "abcd1234!",
-                "abcd1234!",
-                "김철수",
-                "1997-06-09",
-                Gender.MALE
-            );
             userService.save(request);
 
             User user = userRepository.findByEmail(request.getEmail())
@@ -65,14 +70,6 @@ class UserServiceTest {
         @Test
         @DisplayName("실패: 존재하는 이메일")
         void failExistEmail() {
-            SignupRequest request = new SignupRequest(
-                "kim@naver.com",
-                "abcd1234!",
-                "abcd1234!",
-                "김철수",
-                "1997-06-09",
-                Gender.MALE
-            );
             userService.save(request);
             assertThatThrownBy(() -> userService.save(request))
                 .isInstanceOf(RuntimeException.class);
@@ -81,7 +78,7 @@ class UserServiceTest {
         @Test
         @DisplayName("실패: 입력받았던 비밀번호 서로 다름")
         void failNotMatchPassword() {
-            SignupRequest request = new SignupRequest(
+            SignupRequest wrongRequest = new SignupRequest(
                 "kim@naver.com",
                 "abcd1234!",
                 "abcd1234@",
@@ -89,14 +86,14 @@ class UserServiceTest {
                 "1997-06-09",
                 Gender.MALE
             );
-            assertThatThrownBy(() -> userService.save(request))
+            assertThatThrownBy(() -> userService.save(wrongRequest))
                 .isInstanceOf(RuntimeException.class);
         }
 
         @Test
         @DisplayName("실패: 입력받은 이메일 형식이 잘못됨")
         void failWrongExpressionEmail() {
-            SignupRequest request = new SignupRequest(
+            SignupRequest wrongRequest = new SignupRequest(
                 "kimabcd",
                 "abcd1234!",
                 "abcd1234!",
@@ -104,14 +101,14 @@ class UserServiceTest {
                 "1997-06-09",
                 Gender.MALE
             );
-            assertThatThrownBy(() -> userService.save(request))
+            assertThatThrownBy(() -> userService.save(wrongRequest))
                 .isInstanceOf(RuntimeException.class);
         }
 
         @Test
         @DisplayName("실패: 입력받은 비밀번호 형식이 잘못됨")
         void failWrongExpressionPassword() {
-            SignupRequest request = new SignupRequest(
+            SignupRequest wrongRequest = new SignupRequest(
                 "kimabcd",
                 "abcd1234",
                 "abcd1234",
@@ -119,7 +116,7 @@ class UserServiceTest {
                 "1997-06-09",
                 Gender.MALE
             );
-            assertThatThrownBy(() -> userService.save(request))
+            assertThatThrownBy(() -> userService.save(wrongRequest))
                 .isInstanceOf(RuntimeException.class);
         }
     }
@@ -152,28 +149,14 @@ class UserServiceTest {
         @Test
         @DisplayName("성공: 중복되지 않음")
         void success() {
-            SignupRequest request = new SignupRequest(
-                "kim@naver.com",
-                "abcd1234!",
-                "abcd1234!",
-                "김철수",
-                "1997-06-09",
-                Gender.MALE
-            );
+            userService.save(request);
             userService.validateEmail("cho@naver.com");
         }
 
         @Test
         @DisplayName("실패: 존재하는 이메일")
         void failExistEmail() {
-            SignupRequest request = new SignupRequest(
-                "kim@naver.com",
-                "abcd1234!",
-                "abcd1234!",
-                "김철수",
-                "1997-06-09",
-                Gender.MALE
-            );
+            userService.save(request);
             assertThatThrownBy(() -> userService.validateEmail("kim@naver.com"))
                 .isInstanceOf(RuntimeException.class);
         }
