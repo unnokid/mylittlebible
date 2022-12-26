@@ -34,11 +34,8 @@ public class UserService {
         Validation.validatePassword(request.getPassword());
         validatePassword(request.getPassword(), request.getPasswordCheck());
 
-        //존재하는 이메일인 경우
-        userRepository.findByEmail(request.getEmail())
-            .ifPresent(a ->{
-                throw  new RuntimeException();
-            });
+        //존재하는 이메일인 경우 확인
+        validateEmail(request.getEmail());
 
         userRepository.save(UserConverter.toUser(request));
     }
