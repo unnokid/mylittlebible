@@ -7,6 +7,7 @@ import com.example.mylittlebible.domain.user.dto.MyPageResponse;
 import com.example.mylittlebible.domain.user.dto.SignupRequest;
 import com.example.mylittlebible.domain.user.dto.UserInfoResponse;
 import com.example.mylittlebible.domain.user.service.UserService;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,6 +40,14 @@ public class UserController {
     public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response){
         userService.login(loginRequest.getEmail(),loginRequest.getPassword(),response);
 
+        return ResponseEntity.ok().build();
+    }
+
+    @LoginCheck
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@CurrentUser String email, HttpServletRequest request){
+
+        userService.logout(email,request);
         return ResponseEntity.ok().build();
     }
 
