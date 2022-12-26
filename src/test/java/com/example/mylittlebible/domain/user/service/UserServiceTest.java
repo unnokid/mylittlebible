@@ -152,7 +152,30 @@ class UserServiceTest {
         @Test
         @DisplayName("성공: 중복되지 않음")
         void success() {
+            SignupRequest request = new SignupRequest(
+                "kim@naver.com",
+                "abcd1234!",
+                "abcd1234!",
+                "김철수",
+                "1997-06-09",
+                Gender.MALE
+            );
+            userService.validateEmail("cho@naver.com");
+        }
 
+        @Test
+        @DisplayName("실패: 존재하는 이메일")
+        void failExistEmail() {
+            SignupRequest request = new SignupRequest(
+                "kim@naver.com",
+                "abcd1234!",
+                "abcd1234!",
+                "김철수",
+                "1997-06-09",
+                Gender.MALE
+            );
+            assertThatThrownBy(() -> userService.validateEmail("kim@naver.com"))
+                .isInstanceOf(RuntimeException.class);
         }
     }
 
