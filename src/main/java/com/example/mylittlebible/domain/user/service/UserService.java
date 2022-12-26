@@ -9,6 +9,7 @@ import com.example.mylittlebible.domain.user.entity.User;
 import com.example.mylittlebible.domain.user.repository.UserRepository;
 import com.example.mylittlebible.domain.user.util.UserConverter;
 import com.example.mylittlebible.domain.user.util.Validation;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,12 @@ public class UserService {
         Validation.validatePassword(request.getPassword());
         validatePassword(request.getPassword(), request.getPasswordCheck());
 
+        //존재하는 이메일인 경우
+        userRepository.findByEmail(request.getEmail())
+            .ifPresent(a ->{
+                throw  new RuntimeException();
+            });
+
         userRepository.save(UserConverter.toUser(request));
     }
 
@@ -44,6 +51,14 @@ public class UserService {
         }
         //세션 생성
         sessionManager.createSession(user.getId(),response);
+    }
+
+    public void logout(String email,HttpServletRequest request){
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(RuntimeException::new);
+
+        sessionManager.expire(request);
+
     }
 
     @Transactional
