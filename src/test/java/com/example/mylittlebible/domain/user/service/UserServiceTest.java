@@ -180,7 +180,17 @@ class UserServiceTest {
         @Test
         @DisplayName("성공: 탈퇴 성공")
         void success() {
+            userService.save(request);
+            User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(RuntimeException::new);
+            userService.delete(user.getId());
+        }
 
+        @Test
+        @DisplayName("실패: 존재하지 않는 유저 삭제")
+        void failNotExistEmail() {
+            assertThatThrownBy(() -> userService.delete(-10L))
+                .isInstanceOf(RuntimeException.class);
         }
     }
 
