@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 @Transactional
 @SpringBootTest
@@ -34,6 +36,11 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     private SignupRequest request;
+
+    protected MockHttpServletResponse mockResponse;
+
+    protected MockHttpServletRequest mockRequest;
+
     @BeforeEach
     void setup() {
         request = new SignupRequest(
@@ -44,11 +51,15 @@ class UserServiceTest {
             "1997-06-09",
             Gender.MALE
         );
+
+        mockResponse = new MockHttpServletResponse();
+        mockRequest = new MockHttpServletRequest();
     }
 
     @AfterEach
     void tearDown() {
         userRepository.deleteAll();
+        sessionManager.clear();
     }
 
     @Nested
@@ -131,6 +142,36 @@ class UserServiceTest {
         @Test
         @DisplayName("성공: 로그인 성공")
         void success() {
+            userService.save(request);
+            userService.login(request.getEmail(),request.getPassword(), mockResponse);
+
+            //쿠키 저장
+            mockRequest.setCookies(mockResponse.getCookies());
+
+            User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(RuntimeException::new);
+
+            Object session = sessionManager.getSession(mockRequest);
+
+            assertThat(session).isEqualTo(user.getId());
+        }
+
+        @Test
+        @DisplayName("실패: 잘못된 이메일")
+        void failWrongEmail() {
+            userService.save(request);
+
+            assertThatThrownBy(() -> userService.login("kim@asdf.com",request.getPassword(), mockResponse))
+                .isInstanceOf(RuntimeException.class);
+        }
+
+        @Test
+        @DisplayName("실패: 잘못된 비밀번호")
+        void failWrongPassword() {
+            userService.save(request);
+
+            assertThatThrownBy(() -> userService.login(request.getEmail(),"1q2w3e4r!", mockResponse))
+                .isInstanceOf(RuntimeException.class);
         }
     }
 
@@ -141,7 +182,15 @@ class UserServiceTest {
         @Test
         @DisplayName("성공: 로그아웃 성공")
         void success() {
+            userService.save(request);
+            userService.login(request.getEmail(),request.getPassword(), mockResponse);
 
+            //쿠키 저장
+            mockRequest.setCookies(mockResponse.getCookies());
+
+            userService.logout(request.getEmail(), mockRequest);
+
+            assertThat(sessionManager.getSession(mockRequest)).isNull();
         }
     }
 
@@ -184,7 +233,7 @@ class UserServiceTest {
         }
 
         @Test
-        @DisplayName("싪패: 존재하지 않는 유저 정보 입력")
+        @DisplayName("실패: 존재하지 않는 유저 정보 입력")
         void failNotExistUser() {
             assertThatThrownBy(() -> userService.getUserInfo(-10L))
                 .isInstanceOf(RuntimeException.class);
