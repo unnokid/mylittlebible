@@ -50,4 +50,8 @@ public class SessionManager {
             .findAny()
             .orElse(null);
     }
+
+    public void clear(){
+        sessionStore.clear();
+    }
 }
