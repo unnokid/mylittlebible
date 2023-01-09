@@ -1,8 +1,8 @@
 package com.example.mylittlebible.domain.board.service;
 
 import com.example.mylittlebible.domain.board.dto.BoardInfoResponse;
-import com.example.mylittlebible.domain.board.dto.SaveRequest;
-import com.example.mylittlebible.domain.board.dto.UpdateRequest;
+import com.example.mylittlebible.domain.board.dto.SaveBoardRequest;
+import com.example.mylittlebible.domain.board.dto.UpdateBoardRequest;
 import com.example.mylittlebible.domain.board.entity.Board;
 import com.example.mylittlebible.domain.board.repository.BoardRepository;
 import com.example.mylittlebible.domain.board.util.BoardConverter;
@@ -26,7 +26,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void save(SaveRequest request){
+    public void save(SaveBoardRequest request){
 
         User user = userRepository.findById(request.getUserId())
             .orElseThrow(RuntimeException::new);
@@ -50,7 +50,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void update(UpdateRequest request){
+    public void update(UpdateBoardRequest request){
         Board board = boardRepository.findById(request.getBoardId())
             .orElseThrow(RuntimeException::new);
 
