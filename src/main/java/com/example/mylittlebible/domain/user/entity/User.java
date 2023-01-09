@@ -1,5 +1,7 @@
 package com.example.mylittlebible.domain.user.entity;
 
+import com.example.mylittlebible.domain.board.entity.Board;
+import com.example.mylittlebible.domain.comment.entity.Comment;
 import com.example.mylittlebible.domain.user.util.PasswordEncryptor;
 import com.example.mylittlebible.domain.user.util.Validation;
 import java.time.LocalDate;
@@ -53,6 +55,12 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Favorite> bookmark = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL ,orphanRemoval = true)
+    private List<Board> boards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL ,orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
     //최근 마지막으로 본 구절
     private FavoriteId recent;
 
@@ -77,6 +85,14 @@ public class User {
 
     public boolean matchPassword(String password) {
         return PasswordEncryptor.isMatch(password, this.password);
+    }
+
+    public void addBoard(Board board){
+        this.boards.add(board);
+    }
+
+    public void addComment(Comment comment){
+        this.comments.add(comment);
     }
 
 }

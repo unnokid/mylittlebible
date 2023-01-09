@@ -20,6 +20,7 @@ public class UserConverter {
 
     public static UserInfoResponse getInfoFromUser(User user){
         return UserInfoResponse.builder()
+            .id(user.getId())
             .name(user.getName())
             .gender(user.getGender())
             .birth(user.getBirth().toString())
@@ -29,6 +30,7 @@ public class UserConverter {
 
     public static MyPageResponse getMyInfoFromUser(User user){
         return MyPageResponse.builder()
+            .id(user.getId())
             .email(user.getEmail())
             .name(user.getName())
             .gender(user.getGender())

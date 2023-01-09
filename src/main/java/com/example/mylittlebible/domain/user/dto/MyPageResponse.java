@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 public class MyPageResponse {
-
+    private Long id;
     private String email;
     private String name;
     private Gender gender;

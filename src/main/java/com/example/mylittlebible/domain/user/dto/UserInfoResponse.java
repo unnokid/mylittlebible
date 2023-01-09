@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UserInfoResponse {
+    private Long id;
     private String name;
     private Gender gender;
     private String birth;
